@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="client.Main" prefWidth="200" prefHeight="200" alignment="CENTER">
+    <TextField fx:id="loginFieldForReg" promptText="login" prefWidth="200"/>
+    <TextField fx:id="passwordFieldForReg" promptText="password" prefWidth="200"/>
+    <TextField fx:id="nickForReg" promptText="nickname" prefWidth="200"/>
+    <Button text="Registration" fx:id="sendRegistration" prefWidth="200"/>
+    <Label fx:id="result" prefHeight="-Infinity" prefWidth="-Infinity"/>
+</VBox>
+

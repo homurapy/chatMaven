@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
+          fx:controller="client.Controller" prefHeight="400.0" prefWidth="600.0" hgap="10" vgap="10">
+    <HBox fx:id="autorizationField" GridPane.columnSpan="2">
+        <TextField fx:id="loginField" promptText="login" HBox.hgrow="ALWAYS"/>
+        <PasswordField fx:id="passwordField" promptText="password" HBox.hgrow="ALWAYS"/>
+        <Button fx:id="ConnectBtn" text="Connect" onAction="#sendReg"/>
+        <Button text="Registration"/>
+    </HBox>
+    <TextArea fx:id="mainTextArea" editable="false" GridPane.rowIndex="0" GridPane.columnIndex="0"
+              GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" nodeOrientation="RIGHT_TO_LEFT"/>
+    <TextArea fx:id="clientsList" editable="false" GridPane.rowIndex="0" GridPane.columnIndex="1"
+              GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" prefWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT"/>
+
+
+    <TextField fx:id="messageUser" promptText="Write message" GridPane.rowIndex="1" GridPane.columnIndex="0"
+               GridPane.hgrow="SOMETIMES" onAction="#sendMsg"/>
+    <Button text="Send" fx:id="sendMsgBtn" GridPane.rowIndex="1" GridPane.columnIndex="1" onAction="#sendMsg"/>
+
+    <padding>
+        <Insets top="5" bottom="5" left="5" right="5"/>
+    </padding>
+</GridPane>
