@@ -8,9 +8,10 @@ public class SQLHandler {
 
     public static void connect () {
         try {
-            connection = DriverManager.getConnection("jdbs:sqlite:server/database.db");
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite:server/database.db");
             statement = connection.createStatement();
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
