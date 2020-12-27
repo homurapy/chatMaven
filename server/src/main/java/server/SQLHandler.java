@@ -38,11 +38,14 @@ public class SQLHandler {
 
     public static boolean tryToRegistNewUser (String login, String pass, String nick) {
         try {
+            connect();
             statement.executeUpdate("INSERT INTO users login='" + login + "' password='" + pass + "' nickname='" + nick + "'");
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }finally {
+            disconnect();
         }
     }
 
@@ -60,11 +63,14 @@ public class SQLHandler {
 
     public static boolean tryToUpdateNickInDb (String nickNew, String nickOld) {
         try {
+            connect();
             statement.executeUpdate("UPDATE users SET nickname='" + nickNew + "' WHERE nickname='" + nickOld + "'");
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }finally {
+            disconnect();
         }
     }
 }

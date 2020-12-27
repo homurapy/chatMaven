@@ -1,5 +1,6 @@
 package client;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -40,6 +42,7 @@ public class Controller implements Initializable {
     public void initialize (URL url, ResourceBundle resourceBundle) {
         setAuthStatus(false);
 
+
     }
 public void connect(){
         try {
@@ -51,10 +54,9 @@ public void connect(){
                     try {
                         String inputStr = in.readUTF();
                         String[] authWord =inputStr.split(" ");
-
-                    if(authWord[0].equals("/authOk") && authWord.length == 1){
+                    if(authWord[0].equals("/authOk") && authWord.length == 2){
                         setAuthStatus(true);
-//                        nickname = authWord[1];
+                        nickname = authWord[1];
                         break;
                         }
                   } catch (IOException e) {
@@ -64,7 +66,16 @@ public void connect(){
                 while (true) {
                     try {
                         String str = in.readUTF();
-                        mainTextArea.appendText(str + System.lineSeparator());
+                        String[] strings = str.split(" ");
+                        if(strings[0].equals("/changenick") && strings.length == 2){
+                            nickname = strings[1];
+                            Platform.runLater(() -> {
+                            ((Stage) mainTextArea.getScene().getWindow()).setTitle("Java Chat Client: " + nickname);
+                            });
+                        }
+                        else {
+                            mainTextArea.appendText(str + System.lineSeparator());
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -76,6 +87,16 @@ public void connect(){
     }
 
     public void sendMsg () {
+        try {
+            String str = messageUser.getText();
+            out.writeUTF(str);
+            messageUser.clear();
+            messageUser.requestFocus();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void sendMsg (String s) {
         try {
             String str = messageUser.getText();
             out.writeUTF(str);
@@ -98,15 +119,23 @@ public void connect(){
             mainTextArea.setVisible(false);
             messageUser.setVisible(false);
             clientsList.setVisible(false);
-        }
+            nickname = "";
 
+        }
+        Platform.runLater(() -> {
+            if (nickname.isEmpty()) {
+                ((Stage) mainTextArea.getScene().getWindow()).setTitle("Java Chat Client");
+            }
+            else {
+                ((Stage) mainTextArea.getScene().getWindow()).setTitle("Java Chat Client: " + nickname);
+            }
+        });
     }
 
     public void sendReg (ActionEvent actionEvent) {
         connect();
         if (loginField.getText() != null && passwordField != null) {
             String str = "/tryauth " + loginField.getText() + " " + passwordField.getText();
-            System.out.println(str);
             loginField.clear();
             passwordField.clear();
             try {

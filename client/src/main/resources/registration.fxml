@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="client.Main" prefWidth="200" prefHeight="200" alignment="CENTER">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="client.Main_s" prefWidth="200" prefHeight="200" alignment="CENTER">
     <TextField fx:id="loginFieldForReg" promptText="login" prefWidth="200"/>
     <TextField fx:id="passwordFieldForReg" promptText="password" prefWidth="200"/>
     <TextField fx:id="nickForReg" promptText="nickname" prefWidth="200"/>
