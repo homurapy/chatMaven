@@ -8,10 +8,9 @@ public class SQLHandler {
 
     public static void connect () {
         try {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:server/database.db");
+            connection = DriverManager.getConnection("jdbs:sqlite:server/database.db");
             statement = connection.createStatement();
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -37,18 +36,12 @@ public class SQLHandler {
     }
 
     public static boolean tryToRegistNewUser (String login, String pass, String nick) {
-            connect();
         try {
-            connection.setAutoCommit(false);
             statement.executeUpdate("INSERT INTO users login='" + login + "' password='" + pass + "' nickname='" + nick + "'");
-            connection.commit();
             return true;
         } catch (SQLException e) {
-            rollback(connection);
             e.printStackTrace();
             return false;
-        }finally {
-            disconnect();
         }
     }
 
@@ -65,25 +58,12 @@ public class SQLHandler {
     }
 
     public static boolean tryToUpdateNickInDb (String nickNew, String nickOld) {
-        connect();
         try {
-            connection.setAutoCommit(false);
             statement.executeUpdate("UPDATE users SET nickname='" + nickNew + "' WHERE nickname='" + nickOld + "'");
-            connection.commit();
             return true;
         } catch (SQLException e) {
-            rollback(connection);
             e.printStackTrace();
             return false;
-        }finally {
-            disconnect();
-        }
-    }
-    public static void rollback (Connection connection){
-        try {
-            connection.rollback();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }
