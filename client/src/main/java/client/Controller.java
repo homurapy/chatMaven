@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -31,6 +32,8 @@ public class Controller implements Initializable {
     @FXML
     Button ConnectBtn, sendMsgBtn;
 
+    @FXML
+    GridPane Main;
 
     private Socket socket;
     private DataInputStream in;
@@ -41,19 +44,22 @@ public class Controller implements Initializable {
     @Override
     public void initialize (URL url, ResourceBundle resourceBundle) {
         setAuthStatus(false);
-
+        Platform.runLater(() -> ((Stage) Main.getScene().getWindow()).setOnCloseRequest(t -> {
+            sendMsg("/end");
+            Platform.exit();
+        }));
 
     }
 public void connect(){
         try {
-            socket = new Socket("localhost", 8189);
+            socket = new Socket("localhost", 8188);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
             new Thread(() -> {
                   while (true){
                     try {
-                        String inputStr = in.readUTF();
-                        String[] authWord =inputStr.split(" ");
+                        String str = in.readUTF();
+                        String[] authWord =str.split(" ");
                     if(authWord[0].equals("/authOk") && authWord.length == 2){
                         setAuthStatus(true);
                         nickname = authWord[1];
@@ -72,6 +78,12 @@ public void connect(){
                             Platform.runLater(() -> {
                             ((Stage) mainTextArea.getScene().getWindow()).setTitle("Java Chat Client: " + nickname);
                             });
+                        }
+                        else if(strings[0].equals("/listchart") && strings.length >= 2){
+                            clientsList.clear();
+                            for (int i = 1; i < strings.length; i++) {
+                                clientsList.appendText(strings[i]+System.lineSeparator());
+                            }
                         }
                         else {
                             mainTextArea.appendText(str + System.lineSeparator());
@@ -140,6 +152,7 @@ public void connect(){
             passwordField.clear();
             try {
                 out.writeUTF(str);
+                System.out.println(str);
             } catch (IOException e) {
                 e.printStackTrace();
             }

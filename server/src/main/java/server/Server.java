@@ -14,7 +14,7 @@ public class Server {
     public Server () {
         try {
             SQLHandler.connect();
-            ServerSocket serverSocket = new ServerSocket(8189);
+            ServerSocket serverSocket = new ServerSocket(8188);
             clients = new ConcurrentHashMap<>();
             while (true) {
                 System.out.println("Server was started! Await connection clients");
@@ -31,11 +31,13 @@ public class Server {
     public void subscribe (ClientHandler client){
             clients.put(client.getNickname(), client);
             client.sendMsg("Wellcome to chart!!!");
+            listChart();
     }
 
     public void unsubscribe (ClientHandler client) {
         clients.remove(client.getNickname(), client);
         client.sendMsg(client.getNickname() + " left the chat");
+        listChart();
     }
 
     public void broadcastMsg(String msg) {
@@ -47,6 +49,16 @@ public class Server {
         if (clients.keySet().contains(nick)){
             return true;
         }
-        else return false;
+        else {
+            return false;
+        }
     }
+    public void listChart(){
+    StringBuilder bn = new StringBuilder();
+        bn.append("/listchart");
+        for (String nick: clients.keySet()) {
+        bn.append(" " + nick);
+        }
+        broadcastMsg(bn.toString());
+        }
 }
