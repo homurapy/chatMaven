@@ -61,4 +61,10 @@ public class Server {
         }
         broadcastMsg(bn.toString());
         }
+    public void unicastMsg(String msg, String sender,String receiver) {
+        ClientHandler sndr = clients.get(sender);
+        sndr.sendMsg(msg);
+        ClientHandler rcvr = clients.get(receiver);
+        rcvr.sendMsg(msg);
+    }
 }

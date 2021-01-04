@@ -75,6 +75,14 @@ public class ClientHandler {
                                 out.writeUTF("The user with this nickname already exists in the chat");
                             }
                         }
+                        else if (strings[0].equals("/w") && strings.length > 2){
+                            if (server.isNickInChat(strings[1])){
+                                server.unicastMsg(this.nickname + " : " + strChat.substring(strChat.indexOf(strings[2])), this.nickname, strings[1]);
+                            }
+                            else {
+                                sendMsg("User with nickname " + strings[1] + " missing in the chart");
+                            }
+                        }
 
                         if (strChat.equals("/end")) {
                             break;
