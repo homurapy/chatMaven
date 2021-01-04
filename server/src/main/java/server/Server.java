@@ -14,7 +14,7 @@ public class Server {
     public Server () {
         try {
             SQLHandler.connect();
-            ServerSocket serverSocket = new ServerSocket(8188);
+            ServerSocket serverSocket = new ServerSocket(8420);
             clients = new ConcurrentHashMap<>();
             while (true) {
                 System.out.println("Server was started! Await connection clients");

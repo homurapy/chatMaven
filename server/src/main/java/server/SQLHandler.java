@@ -1,5 +1,6 @@
 package server;
 
+import javax.lang.model.type.NullType;
 import java.sql.*;
 
 public class SQLHandler {
@@ -26,25 +27,32 @@ public class SQLHandler {
 
     public static String getNickOnLoginPass (String login, String pass) throws SQLException {
         try {
+
             ResultSet rs = statement.executeQuery("SELECT nickname FROM users WHERE login ='" + login + "' AND password = '" + pass + "'");
             if (rs.next()) {
+
                 return rs.getString("nickname");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
     public static boolean tryToRegistNewUser (String login, String pass, String nick) {
-            connect();
-        try {
+        connect();
+
+    try(PreparedStatement statement = connection.prepareStatement("INSERT INTO users (login, password,nickname) VALUES (?, ?, ?)")) {
             connection.setAutoCommit(false);
-            statement.executeUpdate("INSERT INTO users login='" + login + "' password='" + pass + "' nickname='" + nick + "'");
+            statement.setString(1, login);
+            statement.setString(2, pass);
+            statement.setString(3, nick);
+            int row = statement.executeUpdate();
+            System.out.println(row);
             connection.commit();
             return true;
         } catch (SQLException e) {
-            rollback(connection);
             e.printStackTrace();
             return false;
         }finally {
@@ -54,7 +62,20 @@ public class SQLHandler {
 
     public static boolean isNickInDb (String nick) {
         try {
+
             ResultSet rs = statement.executeQuery("SELECT nickname FROM users WHERE nickname='" + nick + "'");
+            if (rs.next()) {
+
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public static boolean isLoginInDb (String login) {
+        try {
+            ResultSet rs = statement.executeQuery("SELECT login FROM users WHERE nickname='" + login + "'");
             if (rs.next()) {
                 return true;
             }

@@ -14,15 +14,18 @@ public class ClientHandler {
     private String nickname;
 
     public ClientHandler (Server server, Socket socket) {
+
         try {
             this.server = server;
             this.socket = socket;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
+            boolean reg = false;
             new Thread(() -> {
                 try {
                     while (true) {
                         String str = in.readUTF();
+                        System.out.println(str);
                         String[] strings = str.split(" ");
                         if (str.startsWith("/tryauth") && strings.length == 3) {
                             String nickDB = SQLHandler.getNickOnLoginPass(strings[1], strings[2]);
@@ -38,12 +41,24 @@ public class ClientHandler {
                                     break;
                                 }
                             } else {
-                                out.writeUTF("Login or password is not correct");
+                                sendMsg("Login or password is not correct");
                             }
                         }
+                        if (str.startsWith("/registration")){
+                               if(strings.length ==4 && !SQLHandler.isLoginInDb(strings[1]) && !SQLHandler.isNickInDb(strings[3])){
+                                SQLHandler.tryToRegistNewUser(strings[1],strings[2], strings[3]);
+                                sendMsg("Registration comlied");
+                                break;
+                            }
+                            else {
+                                sendMsg("Incorrect login/nickname");
+                            }
+                       }
+
                     }
                     while (true) {
                         String strChat = in.readUTF();
+                        System.out.println(strChat);
                     if (strChat.startsWith("/")) {
                         String[] strings = strChat.split(" ");
                         // смена nickname в чате
@@ -67,27 +82,13 @@ public class ClientHandler {
                     }
                         else {
                             server.broadcastMsg(this.nickname +" : " + strChat);}
-                        System.out.println(strChat);
+
                     }
 
                 } catch (IOException | SQLException e) {
                     e.printStackTrace();
                 }finally {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        out.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    closeDataStream();
                     server.unsubscribe(this);
                 }
             }).start();
@@ -108,4 +109,22 @@ public class ClientHandler {
     public String getNickname () {
         return nickname;
     }
+    public void closeDataStream(){
+        try {
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
