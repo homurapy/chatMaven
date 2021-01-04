@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="client.controllerRegistr" prefWidth="200" prefHeight="200" alignment="CENTER">
+    <TextField fx:id="loginFieldReg" promptText="login" prefWidth="200"/>
+    <TextField fx:id="passwordFieldReg" promptText="password" prefWidth="200"/>
+    <TextField fx:id="nicknameFieldReg" promptText="nickname" prefWidth="200"/>
+    <Button text="Registration" fx:id="sendRegistration" prefWidth="200" onAction="#registrationToChat"/>
+    <Label fx:id="result" alignment="CENTER" prefWidth="200"/>
+</VBox>
+
