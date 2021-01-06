@@ -4,16 +4,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class Server {
     private Map<String, ClientHandler> clients;
 
     public Server () {
         try {
-            SQLHandler.connect();
             ServerSocket serverSocket = new ServerSocket(8420);
             clients = new ConcurrentHashMap<>();
             while (true) {
@@ -23,8 +20,6 @@ public class Server {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            SQLHandler.disconnect();
         }
         }
 
@@ -67,4 +62,5 @@ public class Server {
         ClientHandler rcvr = clients.get(receiver);
         rcvr.sendMsg(msg);
     }
+
 }

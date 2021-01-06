@@ -257,7 +257,7 @@ if (socket ==null || socket.isClosed() ) {
         Platform.runLater(() -> {
             try (DataInputStream dis = new DataInputStream(new FileInputStream(file))) {
 
-                while (dis.readByte() != -1) {
+                while (dis.readUTF() != null) {
 
                     String st = dis.readUTF();
                     textArea.appendText(st+System.lineSeparator());

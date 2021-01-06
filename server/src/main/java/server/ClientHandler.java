@@ -1,10 +1,11 @@
 package server;
 
+import server.sql.QuerySQL;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.sql.SQLException;
 
 public class ClientHandler {
     private Server server;
@@ -28,7 +29,8 @@ public class ClientHandler {
                         System.out.println(str);
                         String[] strings = str.split(" ");
                         if (str.startsWith("/tryauth") && strings.length == 3) {
-                            String nickDB = SQLHandler.getNickOnLoginPass(strings[1], strings[2]);
+                            QuerySQL querySQL = new QuerySQL();
+                            String nickDB = querySQL.tryNickFromLoginPass(strings[1], strings[2]);
                             if (nickDB != null) {
                                 if (server.isNickInChat(nickDB)) {
                                     out.writeUTF("A user with this nickname already exists in the chat");
@@ -45,8 +47,9 @@ public class ClientHandler {
                             }
                         }
                         if (str.startsWith("/registration")){
-                               if(strings.length ==4 && !SQLHandler.isLoginInDb(strings[1]) && !SQLHandler.isNickInDb(strings[3])){
-                                SQLHandler.tryToRegistNewUser(strings[1],strings[2], strings[3]);
+                            QuerySQL querySQL = new QuerySQL();
+                               if(strings.length ==4 && !querySQL.isLoginInDb(strings[1]) && !querySQL.isNickInDb(strings[3])){
+                                querySQL.tryToRegistNewUser(strings[1],strings[2], strings[3]);
                                 sendMsg("Registration comlied");
                                 break;
                             }
@@ -63,12 +66,11 @@ public class ClientHandler {
                         String[] strings = strChat.split(" ");
                         // смена nickname в чате
                         if (strings[0].equals("/changenick") && strings.length == 2) {
-                            System.out.println(strings[0]);
-                            if (!SQLHandler.isNickInDb(strings[1])) {
-                                SQLHandler.tryToUpdateNickInDb(strings[1], this.nickname);
+                            QuerySQL querySQL = new QuerySQL();
+                            if (!querySQL.isNickInDb(strings[1])) {
+                                querySQL.tryToUpdateNickInDb(strings[1], this.nickname);
                                 server.broadcastMsg("User was changed nickname from " + this.nickname + " to " + strings[1]);
                                 server.unsubscribe(this);
-                                System.out.println(this.nickname);
                                 this.nickname = strings[1];
                                 server.subscribe(this);
                             } else {
@@ -93,7 +95,7 @@ public class ClientHandler {
 
                     }
 
-                } catch (IOException | SQLException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }finally {
                     closeDataStream();
@@ -134,5 +136,4 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
-
 }
