@@ -27,7 +27,7 @@ public class controllerRegistr{
 
             try{
                 if(socket == null || socket.isClosed()){
-                socket = new Socket("localhost", 8420);
+                socket = new Socket("localhost", 8770);
                 in = new DataInputStream(socket.getInputStream());
                 out = new DataOutputStream(socket.getOutputStream());
                 String str ="/registration "+ loginFieldReg.getText()+" "+ passwordFieldReg.getText()+ " "+ nicknameFieldReg.getText();

@@ -49,10 +49,6 @@ public class Controller implements Initializable {
     private DataOutputStream out;
     private boolean authStatus;
     private String nickname;
-    private File file;
-    private String login;
-
-
     @Override
     public void initialize (URL url, ResourceBundle resourceBundle) {
         authStatus = false;
@@ -66,7 +62,7 @@ public class Controller implements Initializable {
     public void connect () {
         try {
 if (socket ==null || socket.isClosed() ) {
-    socket = new Socket("localhost", 8420);
+    socket = new Socket("localhost", 8770);
     in = new DataInputStream(socket.getInputStream());
     out = new DataOutputStream(socket.getOutputStream());
     new Thread(() -> {
@@ -78,10 +74,6 @@ if (socket ==null || socket.isClosed() ) {
                 if (authWord[0].equals("/authOk") && authWord.length == 2) {
                     setAuthStatus(true);
                     nickname = authWord[1];
-                        String source = ".\\client\\src\\main\\resources\\history_"+login+".txt";
-
-                        file = new File(source);
-                        logChart(file, source, nickname);
                     break;
                 }
                 else {
@@ -109,7 +101,7 @@ if (socket ==null || socket.isClosed() ) {
                     }
                 } else {
                     mainTextArea.appendText(str + System.lineSeparator());
-                    doDataOutputStream(file,str);
+
                 }
             }
         } catch (IOException e) {
@@ -206,7 +198,6 @@ if (socket ==null || socket.isClosed() ) {
     public void sendReg (ActionEvent actionEvent) {
         connect();
         if (loginField.getText() != null && passwordField != null) {
-            login = loginField.getText();
             String str = "/tryauth " + loginField.getText() + " " + passwordField.getText();
             loginField.clear();
             passwordField.clear();
@@ -231,42 +222,7 @@ if (socket ==null || socket.isClosed() ) {
             e.printStackTrace();
         }
     }
-    public void  logChart(File file, String source, String nickname){
-        //при отсутствии файла - создание файла истории
-        if (!Files.isRegularFile(Path.of(source))){
-            try {
-                Files.createFile(Path.of(source));
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else {
-            doDataInputStream(mainTextArea,file);
-        }
-
-    }
-    static void doDataOutputStream(File file, String value) {
-        try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(file, true))) {
-            dos.writeUTF(value);
-        } catch (Exception e) {
-            throw new RuntimeException("SWW", e);
-        }
-    }
-    static void doDataInputStream(TextArea textArea,File file) {
-        Platform.runLater(() -> {
-            try (DataInputStream dis = new DataInputStream(new FileInputStream(file))) {
-
-                while (dis.readUTF() != null) {
-
-                    String st = dis.readUTF();
-                    textArea.appendText(st+System.lineSeparator());
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("SWW", e);
-            }
-        });
-    }
 
 
 }

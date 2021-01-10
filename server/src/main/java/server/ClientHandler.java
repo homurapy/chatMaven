@@ -2,10 +2,14 @@ package server;
 
 import server.sql.QuerySQL;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ClientHandler {
     private Server server;
@@ -13,6 +17,7 @@ public class ClientHandler {
     private DataInputStream in;
     private DataOutputStream out;
     private String nickname;
+    private File file;
 
     public ClientHandler (Server server, Socket socket) {
 
@@ -37,6 +42,11 @@ public class ClientHandler {
                                 } else {
                                     this.nickname = nickDB;
                                     str = "/authOk " + nickname;
+                                    //создание файла истории
+                                    String source = ".\\server\\src\\main\\resources\\history_"+strings[1]+".txt";
+                                    file = new File(source);
+                                    logChart(source, nickname, file);
+
                                     server.broadcastMsg(nickname + " joined the chat");
                                     out.writeUTF(str);
                                     server.subscribe(this);
@@ -135,5 +145,52 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public void  logChart(String source, String nickname, File file){
+        //при отсутствии файла - создание файла истории
+        if (!Files.isRegularFile(Path.of(source))){
+            try {
+                Files.createFile(Path.of(source));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            ArrayList <String> list  = doDataInputStream(file);
+            int begin = 10;
+            if(list.size()>begin){ begin = list.size()-begin ;}
+            else { begin = 0;}
+
+            for (int i = begin; i <list.size() ; i++) {
+                sendMsg(list.get(i));
+            }
+
+        }
+
+    }
+    static void doDataOutputStream(File file, String value) {
+        try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(file, true))) {
+            dos.writeUTF(value);
+        } catch (Exception e) {
+            throw new RuntimeException("SWW", e);
+        }
+    }
+    static ArrayList <String> doDataInputStream(File file) {
+
+        try (DataInputStream dis = new DataInputStream(new FileInputStream(file))) {
+            String s = dis.readUTF();
+            ArrayList<String> list = new ArrayList<>();
+            while ((s = dis.readUTF()) != null) {
+                list.add(s);
+            }
+            return list;
+        } catch (Exception e) {
+            throw new RuntimeException("SWW", e);
+        }
+    }
+
+    public File getFile () {
+        return file;
     }
 }

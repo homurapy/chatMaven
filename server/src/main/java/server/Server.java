@@ -11,7 +11,7 @@ public class Server {
 
     public Server () {
         try {
-            ServerSocket serverSocket = new ServerSocket(8420);
+            ServerSocket serverSocket = new ServerSocket(8770);
             clients = new ConcurrentHashMap<>();
             while (true) {
                 System.out.println("Server was started! Await connection clients");
@@ -38,6 +38,8 @@ public class Server {
     public void broadcastMsg(String msg) {
         for (ClientHandler c : clients.values()) {
             c.sendMsg(msg);
+            if(!msg.startsWith("/listchart")){
+            c.doDataOutputStream(c.getFile(), msg);}
         }
     }
     public boolean isNickInChat(String nick){
