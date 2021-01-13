@@ -30,13 +30,16 @@ public class Server {
     }
 
     public void unsubscribe (ClientHandler client) {
-        clients.remove(client.getNickname(), client);
-        client.sendMsg(client.getNickname() + " left the chat");
-        listChart();
+        if (client.getNickname() != null) {
+            clients.remove(client.getNickname(), client);
+            client.sendMsg(client.getNickname() + " left the chat");
+            listChart();
+        }
     }
 
     public void broadcastMsg(String msg) {
-        for (ClientHandler c : clients.values()) {
+            for (ClientHandler c : clients.values()) {
+
             c.sendMsg(msg);
             if(!msg.startsWith("/listchart")){
             c.doDataOutputStream(c.getFile(), msg);}
@@ -59,6 +62,7 @@ public class Server {
         broadcastMsg(bn.toString());
         }
     public void unicastMsg(String msg, String sender,String receiver) {
+
         ClientHandler sndr = clients.get(sender);
         sndr.sendMsg(msg);
         ClientHandler rcvr = clients.get(receiver);

@@ -177,7 +177,6 @@ public class ClientHandler {
         }
     }
     static ArrayList <String> doDataInputStream(File file) {
-
         try (DataInputStream dis = new DataInputStream(new FileInputStream(file))) {
             String s = dis.readUTF();
             ArrayList<String> list = new ArrayList<>();
@@ -192,5 +191,9 @@ public class ClientHandler {
 
     public File getFile () {
         return file;
+    }
+
+    public Socket getSocket () {
+        return socket;
     }
 }
