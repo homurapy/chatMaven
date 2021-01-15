@@ -11,7 +11,7 @@ public class Server {
 
     public Server () {
         try {
-            ServerSocket serverSocket = new ServerSocket(8770);
+            ServerSocket serverSocket = new ServerSocket(8750);
             clients = new ConcurrentHashMap<>();
             while (true) {
                 System.out.println("Server was started! Await connection clients");

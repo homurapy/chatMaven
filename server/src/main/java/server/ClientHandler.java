@@ -42,13 +42,14 @@ public class ClientHandler {
                                 } else {
                                     this.nickname = nickDB;
                                     str = "/authOk " + nickname;
+                                    out.writeUTF(str);
                                     //создание файла истории
                                     String source = ".\\server\\src\\main\\resources\\history_"+strings[1]+".txt";
                                     file = new File(source);
                                     logChart(source, nickname, file);
 
                                     server.broadcastMsg(nickname + " joined the chat");
-                                    out.writeUTF(str);
+
                                     server.subscribe(this);
                                     break;
                                 }
@@ -180,7 +181,8 @@ public class ClientHandler {
         try (DataInputStream dis = new DataInputStream(new FileInputStream(file))) {
             String s = dis.readUTF();
             ArrayList<String> list = new ArrayList<>();
-            while ((s = dis.readUTF()) != null) {
+            while (dis.available() > 0) {
+                s = dis.readUTF();
                 list.add(s);
             }
             return list;
