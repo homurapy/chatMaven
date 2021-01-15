@@ -7,11 +7,9 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.concurrent.ThreadFactory;
 
-public class ClientHandler {
+public class ClientHandler implements ThreadFactory, Runnable {
     private Server server;
     private Socket socket;
     private DataInputStream in;
@@ -20,13 +18,11 @@ public class ClientHandler {
     private File file;
 
     public ClientHandler (Server server, Socket socket) {
-
         try {
             this.server = server;
             this.socket = socket;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
-            boolean reg = false;
             new Thread(() -> {
                 try {
                     while (true) {
@@ -126,6 +122,14 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
+    public void ReadMsg (String msg) {
+        try {
+
+            out.writeUTF(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public String getNickname () {
         return nickname;
@@ -197,5 +201,15 @@ public class ClientHandler {
 
     public Socket getSocket () {
         return socket;
+    }
+
+    @Override
+    public Thread newThread (Runnable r) {
+        return null;
+    }
+
+    @Override
+    public void run () {
+
     }
 }

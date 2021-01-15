@@ -1,18 +1,13 @@
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class Main {
     public static void main (String[] args) {
         CharPrint cP = new CharPrint();
-        Thread t1 = new Thread(() -> {
-            cP.printCharA();
-        });
-        Thread t2 = new Thread(() -> {
-            cP.printCharB();
-        });
-        Thread t3 = new Thread(() -> {
-            cP.printCharC();
-        });
-        t1.start();
-        t2.start();
-        t3.start();
+        ExecutorService service = Executors.newFixedThreadPool(3);
+        service.execute(new Thread(() -> {cP.printCharA();}));
+        service.execute(new Thread(() -> {cP.printCharB();}));
+        service.execute(new Thread(() -> {cP.printCharC();}));
+        }
 
-    }
 }

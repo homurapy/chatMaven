@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
     private Map<String, ClientHandler> clients;
@@ -16,7 +18,9 @@ public class Server {
             while (true) {
                 System.out.println("Server was started! Await connection clients");
                 Socket socket = serverSocket.accept();
-                ClientHandler c = new ClientHandler(this, socket);
+                ExecutorService service = Executors.newSingleThreadExecutor();
+                service.execute(new ClientHandler(this, socket));
+
             }
         } catch (IOException e) {
             e.printStackTrace();
