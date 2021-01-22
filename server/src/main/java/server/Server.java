@@ -18,8 +18,8 @@ public class Server {
             while (true) {
                 System.out.println("Server was started! Await connection clients");
                 Socket socket = serverSocket.accept();
-                ExecutorService service = Executors.newSingleThreadExecutor();
-                service.execute(new ClientHandler(this, socket));
+                ExecutorService service = Executors.newCachedThreadPool();
+                service.execute(()->new ClientHandler(this, socket));
 
             }
         } catch (IOException e) {

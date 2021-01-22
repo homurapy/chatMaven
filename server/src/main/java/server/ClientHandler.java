@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadFactory;
 
-public class ClientHandler implements ThreadFactory, Runnable {
+public class ClientHandler {
     private Server server;
     private Socket socket;
     private DataInputStream in;
@@ -203,13 +203,4 @@ public class ClientHandler implements ThreadFactory, Runnable {
         return socket;
     }
 
-    @Override
-    public Thread newThread (Runnable r) {
-        return null;
-    }
-
-    @Override
-    public void run () {
-
-    }
 }
