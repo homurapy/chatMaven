@@ -70,6 +70,7 @@ if (socket ==null || socket.isClosed() ) {
             while (true) {
 
                 String str = in.readUTF();
+                System.out.println(str);
                 String[] authWord = str.split(" ");
                 if (authWord[0].equals("/authOk") && authWord.length == 2) {
                     setAuthStatus(true);

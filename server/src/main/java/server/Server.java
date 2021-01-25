@@ -38,7 +38,7 @@ public class Server {
             clients.put(client.getNickname(), client);
             client.sendMsg("Wellcome to chart!!!");
             listChart();
-            logger.debug("User " + client.getNickname() + "add to chart");
+            logger.debug("User " + client.getNickname() + " add to chart");
     }
 
     public void unsubscribe (ClientHandler client) {
