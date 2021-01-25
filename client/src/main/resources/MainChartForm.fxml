@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane fx:id="Main" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
+<GridPane fx:id="lesson4.Main" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
           fx:controller="client.Controller" prefHeight="400.0" prefWidth="600.0" hgap="10" vgap="10" >
     <HBox fx:id="autorizationField"  GridPane.hgrow="ALWAYS">
         <TextField fx:id="loginField" promptText="login" HBox.hgrow="ALWAYS"/>
@@ -27,3 +27,4 @@
         <Insets top="5" bottom="5" left="5" right="5"/>
     </padding>
 </GridPane>
+

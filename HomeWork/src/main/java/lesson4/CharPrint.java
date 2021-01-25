@@ -1,3 +1,4 @@
+package lesson4;
 
 public class CharPrint {
     private char currentLetter = 'A';

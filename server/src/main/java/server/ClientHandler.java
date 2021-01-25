@@ -54,7 +54,7 @@ public class ClientHandler {
                             }
                         }
                         if (str.startsWith("/registration")){
-                            QuerySQL querySQL = new QuerySQL();
+                               QuerySQL querySQL = new QuerySQL();
                                if(strings.length ==4 && !querySQL.isLoginInDb(strings[1]) && !querySQL.isNickInDb(strings[3])){
                                 querySQL.tryToRegistNewUser(strings[1],strings[2], strings[3]);
                                 sendMsg("Registration comlied");

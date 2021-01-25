@@ -7,9 +7,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.log4j.Logger;
+
 
 public class Server {
+    private static final Logger logger = Logger.getLogger(Server.class);
     private Map<String, ClientHandler> clients;
+
+
 
     public Server () {
         try {
@@ -18,12 +23,14 @@ public class Server {
             while (true) {
                 System.out.println("Server was started! Await connection clients");
                 Socket socket = serverSocket.accept();
+                logger.debug("Server was started");
                 ExecutorService service = Executors.newCachedThreadPool();
                 service.execute(()->new ClientHandler(this, socket));
 
             }
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("Server are having trouble connecting");
         }
         }
 
@@ -31,12 +38,14 @@ public class Server {
             clients.put(client.getNickname(), client);
             client.sendMsg("Wellcome to chart!!!");
             listChart();
+            logger.debug("User " + client.getNickname() + "add to chart");
     }
 
     public void unsubscribe (ClientHandler client) {
         if (client.getNickname() != null) {
             clients.remove(client.getNickname(), client);
             client.sendMsg(client.getNickname() + " left the chat");
+            logger.debug("user " + client.getNickname() + " left the chat");
             listChart();
         }
     }
@@ -71,6 +80,7 @@ public class Server {
         sndr.sendMsg(msg);
         ClientHandler rcvr = clients.get(receiver);
         rcvr.sendMsg(msg);
+        logger.debug("Personal message from " + sender + " to "+receiver);
     }
 
 }
