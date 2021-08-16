@@ -14,11 +14,10 @@ public class Server {
     private static final Logger logger = Logger.getLogger(Server.class);
     private Map<String, ClientHandler> clients;
 
-
-
     public Server () {
         try {
-            ServerSocket serverSocket = new ServerSocket(8750);
+            ConfigRead config = ConfigRead.readConfig(ConfigRead.DEFAULT_CONFIG);
+            ServerSocket serverSocket = new ServerSocket(config.getPort(), config.getBackLog(), config.getHost());
             clients = new ConcurrentHashMap<>();
             while (true) {
                 System.out.println("Server was started! Await connection clients");
@@ -52,7 +51,6 @@ public class Server {
 
     public void broadcastMsg(String msg) {
             for (ClientHandler c : clients.values()) {
-
             c.sendMsg(msg);
             if(!msg.startsWith("/listchart")){
             c.doDataOutputStream(c.getFile(), msg);}
