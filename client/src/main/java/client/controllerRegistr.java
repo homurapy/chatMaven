@@ -24,10 +24,10 @@ public class controllerRegistr{
     private DataOutputStream out;
 
     public void registrationToChat (){
-
             try{
+                Config config = Config.readConfig(Config.DEFAULT_CONFIG);
                 if(socket == null || socket.isClosed()){
-                socket = new Socket("localhost", 8750);
+                socket = new Socket(config.getHost(), config.getPort());
                 in = new DataInputStream(socket.getInputStream());
                 out = new DataOutputStream(socket.getOutputStream());
                 String str ="/registration "+ loginFieldReg.getText()+" "+ passwordFieldReg.getText()+ " "+ nicknameFieldReg.getText();
@@ -37,7 +37,7 @@ public class controllerRegistr{
                 nicknameFieldReg.clear();
                 String answer = in.readUTF();
                 result.setText(answer);
-                if (answer.equals("Registration comlied")) {
+                if (answer.equals("Registration complied")) {
                     out.writeUTF("/end");
                 }
                 }

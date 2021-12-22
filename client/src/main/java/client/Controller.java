@@ -19,9 +19,6 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.Socket;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
